@@ -2,6 +2,10 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QPushButton>
+#include <QLabel>
+#include <QLayout>
+#include <QTimer>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -16,6 +20,16 @@ public:
     ~MainWindow();
 
 private:
+    void timerTimeout();
+    void updateTimerLabel();
+
+private:
     Ui::MainWindow *ui;
+    QPushButton *startStopButton_;
+    QLabel *timerLabel_;
+    QGridLayout *screensGrid_;
+    QTimer *timer_;
+    const qint16 INTERVAL;
+    qint16 secondsLeft_;
 };
 #endif // MAINWINDOW_H
