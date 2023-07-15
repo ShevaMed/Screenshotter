@@ -1,0 +1,62 @@
+# Ignoring temporary files Qt Creator
+*.pro.user
+*.pro.user.*
+*.qbs.user
+*.qbs.user.*
+*.qmlproject.user
+*.qmlproject.user.*
+*.qbs
+*.qmlproject
+*.directory
+*.tmp
+*.swp
+*.bak
+*.pecBfe
+
+# Ignoring temporary folders Qt Creator
+.qtc_clangd/
+.qmake.stash
+
+# Ignore compilation temporary files
+*.moc
+*.moc.*
+*.slo
+*.lo
+*.o
+*.obj
+
+#Ignoring forms temporary files
+ui_*.h
+
+# Ignoring Сompiled Dynamic libraries
+*.so
+*.dylib
+
+# Ignoring Compiled Static libraries
+*.lai
+*.la
+*.a
+
+# Ignoring assembly files
+Makefile
+Makefile.*
+*.make
+*.make.*
+
+# Ignoring temporary files and folders
+debug/
+release/
+*.debug
+*.release
+*.debug/
+*.release/
+
+# Ignoring startup files
+*.autosave
+*.autosave.*
+
+# Ignoring Qt Linguist project files
+*.ts
+
+# Ignoring backup files
+*~
