@@ -1,8 +1,9 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "gridwidget.h"
-#include "src/screenlogic/screenshotthread.h"
+#include "src/screenlogic/screenshotworker.h"
 
+#include <QThread>
 #include <QScrollArea>
 #include <QString>
 #include <QCloseEvent>
@@ -13,9 +14,8 @@ MainWindow::MainWindow(QWidget *parent)
       startStopButton_(new QPushButton("Start", this)),
       timerLabel_(new QLabel(this)),
       gridWidget_(new GridWidget(this)),
-      screenshotThread_(new ScreenshotThread(gridWidget_)),
       timer_(new QTimer(this)),
-      INTERVAL(60),
+      INTERVAL(5),
       secondsLeft_(INTERVAL)
 {
     ui->setupUi(this);
@@ -35,19 +35,11 @@ MainWindow::MainWindow(QWidget *parent)
         }
     });
 
-    connect(timer_, &QTimer::timeout, this, [this]()
-    {
-        if (--secondsLeft_ <= 0) {
-            secondsLeft_ = INTERVAL;
-            screenshotThread_->start();
-        }
-        MainWindow::updateTimerLabel();
-    });
+    connect(timer_, &QTimer::timeout, this, &MainWindow::onTimerTimeout);
 }
 
 MainWindow::~MainWindow()
 {
-    delete screenshotThread_;
     delete ui;
 }
 
@@ -74,6 +66,23 @@ void MainWindow::updateTimerLabel()
 {
     timerLabel_->setText(QString("%1:%2").arg(secondsLeft_ / 60, 1, 10, QLatin1Char('0'))
                          .arg(secondsLeft_ % 60, 2, 10, QLatin1Char('0')));
+}
+
+void MainWindow::onTimerTimeout()
+{
+    if (--secondsLeft_ <= 0) {
+        secondsLeft_ = INTERVAL;
+
+        screenshotThread_ = new QThread(this);
+        screenshotWorker_ = new ScreenshotWorker(gridWidget_);
+
+        connect(screenshotThread_, &QThread::started, screenshotWorker_, &ScreenshotWorker::doWork);
+        connect(screenshotWorker_, &ScreenshotWorker::workFinished, screenshotThread_, &QThread::quit);
+        connect(screenshotThread_, &QThread::finished, screenshotWorker_, &ScreenshotWorker::deleteLater);
+
+        screenshotThread_->start();
+    }
+    MainWindow::updateTimerLabel();
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)

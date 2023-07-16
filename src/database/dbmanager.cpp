@@ -61,7 +61,7 @@ bool DBManager::execute(QSqlQuery &query) const
 bool DBManager::insertScreenshot(const ScreenshotInfo &sreenshot) const
 {
     QSqlQuery query(database_);
-    query.prepare("INSERT INTO screenshots_data(hash, similarity, data) "
+    query.prepare("INSERT INTO screenshots(hash, similarity, data) "
                   "VALUES(:hash, :similarity, :data)");
     query.bindValue(":hash", sreenshot.hash);
     query.bindValue(":similarity", sreenshot.similarity);

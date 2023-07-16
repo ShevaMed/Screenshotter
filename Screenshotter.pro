@@ -9,16 +9,16 @@ CONFIG += c++11
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    src/screenlogic/screenshotthread.cpp \
     src/database/dbmanager.cpp \
     src/main.cpp \
+    src/screenlogic/screenshotworker.cpp \
     src/ui/gridwidget.cpp \
     src/ui/mainwindow.cpp
 
 HEADERS += \
-    src/screenlogic/screenshotthread.h \
     src/screenlogic/screenshotinfo.h \
     src/database/dbmanager.h \
+    src/screenlogic/screenshotworker.h \
     src/ui/gridwidget.h \
     src/ui/mainwindow.h
 

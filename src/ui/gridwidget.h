@@ -11,12 +11,19 @@ class GridWidget : public QWidget
 public:
     explicit GridWidget(QWidget *parent = nullptr);
 
-    void pushScreenToGrid(const QPixmap& screen, qint16 similarity, bool pushFront);
+    QPixmap getPreviousScreen() const;
+    void setPreviousScreen(QPixmap screen);
 
-signals:
+    void pushScreenToGrid(const QPixmap& screen, qint16 similarity, bool pushFront);
+    void pushFrontWidgetToGrid(QWidget *widget);
+    void pushBackWidgetToGrid(QWidget *widget);
+
+    QPixmap byteArrayToPixmap(const QByteArray& byteArray) const;
 
 private:
     QGridLayout *screensGrid_;
+    QPixmap previousScreen_;
+    const qint16 COUNT_ELEMENT_IN_ROW;
 };
 
 #endif // GRIDWIDGET_H

@@ -11,7 +11,7 @@ namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
 
 class GridWidget;
-class ScreenshotThread;
+class ScreenshotWorker;
 
 class MainWindow : public QMainWindow
 {
@@ -25,17 +25,24 @@ private:
     void initWindow();
     void updateTimerLabel();
 
+private slots:
+    void onTimerTimeout();
+
 protected:
     void closeEvent(QCloseEvent* event) override;
 
 private:
     Ui::MainWindow *ui;
+
     QPushButton *startStopButton_;
     QLabel *timerLabel_;
     GridWidget *gridWidget_;
-    ScreenshotThread *screenshotThread_;
+
     QTimer *timer_;
     const qint16 INTERVAL;
     qint16 secondsLeft_;
+
+    ScreenshotWorker *screenshotWorker_;
+    QThread *screenshotThread_;
 };
 #endif // MAINWINDOW_H
