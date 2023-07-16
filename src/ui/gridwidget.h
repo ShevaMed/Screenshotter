@@ -7,8 +7,11 @@
 class GridWidget : public QWidget
 {
     Q_OBJECT
+
 public:
     explicit GridWidget(QWidget *parent = nullptr);
+
+    void pushScreenToGrid(const QPixmap& screen, qint16 similarity, bool pushFront);
 
 signals:
 

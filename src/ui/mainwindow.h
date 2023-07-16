@@ -4,7 +4,6 @@
 #include <QMainWindow>
 #include <QPushButton>
 #include <QLabel>
-#include <QLayout>
 #include <QTimer>
 
 QT_BEGIN_NAMESPACE
@@ -12,6 +11,7 @@ namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
 
 class GridWidget;
+class ScreenshotThread;
 
 class MainWindow : public QMainWindow
 {
@@ -31,6 +31,7 @@ private:
     QPushButton *startStopButton_;
     QLabel *timerLabel_;
     GridWidget *gridWidget_;
+    ScreenshotThread *screenshotThread_;
     QTimer *timer_;
     const qint16 INTERVAL;
     qint16 secondsLeft_;

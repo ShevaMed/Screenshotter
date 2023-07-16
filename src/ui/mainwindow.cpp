@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "gridwidget.h"
+#include "src/screenlogic/screenshotthread.h"
 
 #include <QScrollArea>
 #include <QString>
@@ -11,6 +12,7 @@ MainWindow::MainWindow(QWidget *parent)
       startStopButton_(new QPushButton("Start", this)),
       timerLabel_(new QLabel(this)),
       gridWidget_(new GridWidget(this)),
+      screenshotThread_(new ScreenshotThread(gridWidget_)),
       timer_(new QTimer(this)),
       INTERVAL(60),
       secondsLeft_(INTERVAL)

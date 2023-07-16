@@ -12,3 +12,9 @@ GridWidget::GridWidget(QWidget *parent)
     wrapperGrid->addItem(spacerBottom, 1, 0);
     this->setLayout(wrapperGrid);
 }
+
+void GridWidget::pushScreenToGrid(const QPixmap &screen, qint16 similarity, bool pushFront)
+{
+
+}
+
