@@ -23,8 +23,10 @@ public:
 
 private:
     void initWindow();
-    void timerTimeout();
     void updateTimerLabel();
+
+protected:
+    void closeEvent(QCloseEvent* event) override;
 
 private:
     Ui::MainWindow *ui;

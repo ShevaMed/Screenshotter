@@ -6,7 +6,7 @@
 
 class GridWidget;
 
-class ScreenshotThread : QThread
+class ScreenshotThread : public QThread
 {
     Q_OBJECT
 

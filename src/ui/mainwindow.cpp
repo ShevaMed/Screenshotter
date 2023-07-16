@@ -5,6 +5,7 @@
 
 #include <QScrollArea>
 #include <QString>
+#include <QCloseEvent>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
@@ -37,7 +38,8 @@ MainWindow::MainWindow(QWidget *parent)
     connect(timer_, &QTimer::timeout, this, [this]()
     {
         if (--secondsLeft_ <= 0) {
-            MainWindow::timerTimeout();
+            secondsLeft_ = INTERVAL;
+            screenshotThread_->start();
         }
         MainWindow::updateTimerLabel();
     });
@@ -45,6 +47,7 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow()
 {
+    delete screenshotThread_;
     delete ui;
 }
 
@@ -64,17 +67,21 @@ void MainWindow::initWindow()
     vLayout->addWidget(scrollArea);
 
     ui->centralwidget->setLayout(vLayout);
-    setMinimumSize(700, 350);
-}
-
-void MainWindow::timerTimeout()
-{
-    secondsLeft_ = INTERVAL;
+    this->setMinimumSize(700, 350);
 }
 
 void MainWindow::updateTimerLabel()
 {
     timerLabel_->setText(QString("%1:%2").arg(secondsLeft_ / 60, 1, 10, QLatin1Char('0'))
-                                   .arg(secondsLeft_ % 60, 2, 10, QLatin1Char('0')));
+                         .arg(secondsLeft_ % 60, 2, 10, QLatin1Char('0')));
+}
+
+void MainWindow::closeEvent(QCloseEvent *event)
+{
+    if (screenshotThread_ && screenshotThread_->isRunning()) {
+        screenshotThread_->quit();
+        screenshotThread_->wait();
+    }
+    event->accept();
 }
 
