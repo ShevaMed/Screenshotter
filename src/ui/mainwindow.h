@@ -11,6 +11,8 @@ QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
 
+class GridWidget;
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -20,6 +22,7 @@ public:
     ~MainWindow();
 
 private:
+    void initWindow();
     void timerTimeout();
     void updateTimerLabel();
 
@@ -27,7 +30,7 @@ private:
     Ui::MainWindow *ui;
     QPushButton *startStopButton_;
     QLabel *timerLabel_;
-    QGridLayout *screensGrid_;
+    GridWidget *gridWidget_;
     QTimer *timer_;
     const qint16 INTERVAL;
     qint16 secondsLeft_;

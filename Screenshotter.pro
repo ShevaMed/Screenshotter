@@ -11,11 +11,13 @@ CONFIG += c++11
 SOURCES += \
     src/database/dbmanager.cpp \
     src/main.cpp \
+    src/ui/gridwidget.cpp \
     src/ui/mainwindow.cpp
 
 HEADERS += \
     src/screenlogic/screenshotinfo.h \
     src/database/dbmanager.h \
+    src/ui/gridwidget.h \
     src/ui/mainwindow.h
 
 FORMS += \

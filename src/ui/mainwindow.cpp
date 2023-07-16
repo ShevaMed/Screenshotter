@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "gridwidget.h"
 
 #include <QScrollArea>
 #include <QString>
@@ -7,44 +8,15 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
       ui(new Ui::MainWindow),
-      startStopButton_(nullptr),
-      timerLabel_(nullptr),
-      screensGrid_(nullptr),
+      startStopButton_(new QPushButton("Start", this)),
+      timerLabel_(new QLabel(this)),
+      gridWidget_(new GridWidget(this)),
       timer_(new QTimer(this)),
       INTERVAL(60),
       secondsLeft_(INTERVAL)
 {
     ui->setupUi(this);
-
-    startStopButton_ = new QPushButton("Start", this);
-    timerLabel_ = new QLabel(this);
-    screensGrid_ = new QGridLayout;
-
-    QHBoxLayout *hLayout = new QHBoxLayout;
-    hLayout->addWidget(startStopButton_);
-    hLayout->addWidget(timerLabel_);
-    //hLayout->addStretch();
-
-    QGridLayout *wrapperGrid = new QGridLayout;
-    wrapperGrid->addLayout(screensGrid_, 0, 0);
-    QSpacerItem *spacerRight = new QSpacerItem(1, 1, QSizePolicy::Expanding, QSizePolicy::Minimum);
-    QSpacerItem *spacerBottom = new QSpacerItem(1, 1, QSizePolicy::Minimum, QSizePolicy::Expanding);
-    wrapperGrid->addItem(spacerRight, 0, 1);
-    wrapperGrid->addItem(spacerBottom, 1, 0);
-
-    QWidget *scrollWidget = new QWidget(this);
-    scrollWidget->setLayout(wrapperGrid);
-
-    QScrollArea *scrollArea = new QScrollArea(this);
-    scrollArea->setWidgetResizable(true);
-    scrollArea->setWidget(scrollWidget);
-
-    QVBoxLayout *vLayout = new QVBoxLayout;
-    vLayout->addLayout(hLayout);
-    vLayout->addWidget(scrollArea);
-
-    ui->centralwidget->setLayout(vLayout);
-    setMinimumSize(700, 350);
+    this->initWindow();
 
     timer_->setInterval(1000);
     this->updateTimerLabel();
@@ -72,6 +44,25 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::initWindow()
+{
+    QHBoxLayout *hLayout = new QHBoxLayout;
+    hLayout->addWidget(startStopButton_);
+    hLayout->addWidget(timerLabel_);
+    //hLayout->addStretch();
+
+    QScrollArea *scrollArea = new QScrollArea(this);
+    scrollArea->setWidgetResizable(true);
+    scrollArea->setWidget(gridWidget_);
+
+    QVBoxLayout *vLayout = new QVBoxLayout;
+    vLayout->addLayout(hLayout);
+    vLayout->addWidget(scrollArea);
+
+    ui->centralwidget->setLayout(vLayout);
+    setMinimumSize(700, 350);
 }
 
 void MainWindow::timerTimeout()
