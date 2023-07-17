@@ -59,7 +59,7 @@ void MainWindow::initWindow()
     vLayout->addWidget(scrollArea);
 
     ui->centralwidget->setLayout(vLayout);
-    this->setMinimumSize(700, 350);
+    this->setMinimumSize(950, 500);
 }
 
 void MainWindow::updateTimerLabel()

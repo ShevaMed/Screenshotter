@@ -3,8 +3,7 @@
 
 #include <QLabel>
 #include <QPixmap>
-#include <QPainter>
-#include <QPen>
+#include <QGraphicsDropShadowEffect>
 
 GridWidget::GridWidget(QWidget *parent)
     : QWidget{parent},
@@ -21,7 +20,7 @@ GridWidget::GridWidget(QWidget *parent)
 
     QVector<ScreenshotInfo> screens = DBManager::instance().selectAllScreenshots();
 
-    for (int i = screens.count() - 1; i >= 0; --i) {
+    for (qint32 i = screens.count() - 1; i >= 0; --i) {
         this->pushScreenToGrid(this->byteArrayToPixmap(screens[i].data),
                                       screens[i].similarity, false);
     }
@@ -43,17 +42,49 @@ void GridWidget::setPreviousScreen(QPixmap screen)
 
 void GridWidget::pushScreenToGrid(const QPixmap &screen, qint16 similarity, bool pushFront)
 {
+    QLabel *screenLabel = new QLabel(this->parentWidget());
+    QLabel *textLabel = new QLabel(QString::number(similarity) + '%', screenLabel);
 
+    QGraphicsDropShadowEffect* shadowEffect = new QGraphicsDropShadowEffect;
+    shadowEffect->setColor(Qt::black); // border color
+    shadowEffect->setBlurRadius(5);    // border blur radius
+    shadowEffect->setOffset(1, 1);     // border offset
+
+    textLabel->setGraphicsEffect(shadowEffect);
+    textLabel->setStyleSheet("font-size: 30px; color: white;");
+
+    QPixmap scaledScreen = screen.scaled(295, 166, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    screenLabel->setPixmap(scaledScreen);
+
+    if (pushFront) {
+        this->pushFrontWidgetToGrid(screenLabel);
+    } else {
+        this->pushBackWidgetToGrid(screenLabel);
+    }
 }
 
 void GridWidget::pushFrontWidgetToGrid(QWidget *widget)
 {
+    qint32 count = screensGrid_->count();
 
+    for (qint32 i = count - 1; i >= 0; --i) {
+        qint32 row = i / COUNT_ELEMENT_IN_ROW;
+        qint32 column = i % COUNT_ELEMENT_IN_ROW;
+        QLayoutItem *currentItem = screensGrid_->itemAtPosition(row, column);
+
+        row = (i + 1) / COUNT_ELEMENT_IN_ROW;
+        column = (i + 1) % COUNT_ELEMENT_IN_ROW;
+        screensGrid_->addWidget(currentItem->widget(), row, column);
+    }
+    screensGrid_->addWidget(widget, 0, 0);
 }
 
 void GridWidget::pushBackWidgetToGrid(QWidget *widget)
 {
-
+    qint32 count = screensGrid_->count();
+    qint32 row = count / COUNT_ELEMENT_IN_ROW;
+    qint32 column = count % COUNT_ELEMENT_IN_ROW;
+    screensGrid_->addWidget(widget, row, column);
 }
 
 QPixmap GridWidget::byteArrayToPixmap(const QByteArray &byteArray) const
@@ -62,4 +93,3 @@ QPixmap GridWidget::byteArrayToPixmap(const QByteArray &byteArray) const
     pixmap.loadFromData(byteArray, "PNG");
     return pixmap;
 }
-
