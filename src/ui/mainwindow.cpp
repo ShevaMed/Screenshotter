@@ -16,7 +16,9 @@ MainWindow::MainWindow(QWidget *parent)
       gridWidget_(new GridWidget(this)),
       timer_(new QTimer(this)),
       INTERVAL(5),
-      secondsLeft_(INTERVAL)
+      secondsLeft_(INTERVAL),
+      screenshotWorker_(nullptr),
+      screenshotThread_(nullptr)
 {
     ui->setupUi(this);
     this->initWindow();
@@ -45,21 +47,38 @@ MainWindow::~MainWindow()
 
 void MainWindow::initWindow()
 {
+    startStopButton_->setFixedSize(300, 40);
+    startStopButton_->setStyleSheet("QPushButton { "
+                                    "background-color: #254b70;"
+                                    "color: #ffffff; font-size: 20px; font-weight: bold;"
+                                    "border-radius: 10px; }"
+                                    "QPushButton:hover { border: 2px solid black; }"
+                                    "QPushButton:pressed { background-color: #9c0000; }");
+
+    timerLabel_->setAlignment(Qt::AlignmentFlag::AlignCenter);
+    timerLabel_->setStyleSheet("color: #cc0000; font-size: 25px; font-weight: bold;");
+
     QHBoxLayout *hLayout = new QHBoxLayout;
+    QSpacerItem *spacerLeft= new QSpacerItem(1, 1, QSizePolicy::Expanding, QSizePolicy::Minimum);
+    QSpacerItem *spacerCenter = new QSpacerItem(1, 1, QSizePolicy::Expanding, QSizePolicy::Minimum);
+    QSpacerItem *spacerRight = new QSpacerItem(1, 1, QSizePolicy::Expanding, QSizePolicy::Minimum);
+    hLayout->addSpacerItem(spacerLeft);
     hLayout->addWidget(startStopButton_);
+    hLayout->addSpacerItem(spacerCenter);
     hLayout->addWidget(timerLabel_);
-    //hLayout->addStretch();
+    hLayout->addSpacerItem(spacerRight);
 
     QScrollArea *scrollArea = new QScrollArea(this);
     scrollArea->setWidgetResizable(true);
     scrollArea->setWidget(gridWidget_);
 
     QVBoxLayout *vLayout = new QVBoxLayout;
-    vLayout->addLayout(hLayout);
     vLayout->addWidget(scrollArea);
+    vLayout->addLayout(hLayout);
 
     ui->centralwidget->setLayout(vLayout);
-    this->setMinimumSize(950, 500);
+    this->setFixedSize(950, 590);
+    this->setWindowTitle("Screenshotter");
 }
 
 void MainWindow::updateTimerLabel()
