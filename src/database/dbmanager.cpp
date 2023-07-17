@@ -1,11 +1,11 @@
 #include "dbmanager.h"
+#include "src/screenlogic/screenshotinfo.h"
 
 #include <QCoreApplication>
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QMessageBox>
 #include <QVariant>
-#include <QDebug>
 
 DBManager &DBManager::instance()
 {
@@ -28,8 +28,8 @@ DBManager::DBManager()
 bool DBManager::openDB()
 {
     if (!database_.open()) {
-        QMessageBox::critical(nullptr, "Помилка відкриття бази даних",
-                              "Не вдалося відкрити базу даних. Спробуйте ще раз!\n"
+        QMessageBox::critical(nullptr, "Error opening database",
+                              "Could not open database. Please try again!\n"
                               + database_.lastError().databaseText());
         return false;
     }
@@ -50,9 +50,9 @@ bool DBManager::openDB()
 bool DBManager::execute(QSqlQuery &query) const
 {
     if (!query.exec()) {
-        QMessageBox::critical(nullptr, "Помилка запиту до бази даних",
-                                  "Не вдалося звернутися до бази даних. "
-                                  "Спробуйте ще раз!\n" + query.lastError().text());
+        QMessageBox::critical(nullptr, "Database query error",
+                              "Failed to access the database."
+                              "Try again!\n" + query.lastError().text());
         return false;
     }
     return true;

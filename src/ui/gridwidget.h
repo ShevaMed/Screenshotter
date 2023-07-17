@@ -21,9 +21,11 @@ public:
     QPixmap byteArrayToPixmap(const QByteArray& byteArray) const;
 
 private:
+    void initWidget();
+
+private:
     QGridLayout *screensGrid_;
     QPixmap previousScreen_;
-    const qint16 COUNT_ELEMENT_IN_ROW;
 };
 
 #endif // GRIDWIDGET_H

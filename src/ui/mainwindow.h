@@ -22,7 +22,7 @@ public:
     ~MainWindow();
 
 private:
-    void initWindow();
+    void initWidget();
     void updateTimerLabel();
 
 private slots:
@@ -39,8 +39,7 @@ private:
     GridWidget *gridWidget_;
 
     QTimer *timer_;
-    const qint16 INTERVAL;
-    qint16 secondsLeft_;
+    qint32 secondsLeft_;
 
     ScreenshotWorker *screenshotWorker_;
     QThread *screenshotThread_;

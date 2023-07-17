@@ -1,4 +1,5 @@
 #include "screenshotworker.h"
+#include "src/screenlogic/screenshotinfo.h"
 #include "src/database/dbmanager.h"
 #include "src/ui/gridwidget.h"
 #include "src/ui/mainwindow.h"
@@ -40,8 +41,8 @@ qint16 ScreenshotWorker::compareScreenshots(const QPixmap &previousScreen, const
     qint32 height = previousImage.height();
     qint64 differentPixels = 0;
 
-    for (int y = 0; y < height; ++y) {
-        for (int x = 0; x < width; ++x) {
+    for (qint32 y = 0; y < height; ++y) {
+        for (qint32 x = 0; x < width; ++x) {
             QRgb previousPixel = previousImage.pixel(x, y);
             QRgb currentPixel = currentImage.pixel(x, y);
             if (previousPixel != currentPixel) {
@@ -49,7 +50,7 @@ qint16 ScreenshotWorker::compareScreenshots(const QPixmap &previousScreen, const
             }
         }
     }
-    int totalPixels = width * height;
+    qint64 totalPixels = width * height;
     double similarity = (1.0 - (static_cast<double>(differentPixels) / totalPixels)) * 100.0;
     return static_cast<qint16>(similarity);
 }

@@ -1,5 +1,7 @@
 #include "gridwidget.h"
+#include "src/screenlogic/screenshotinfo.h"
 #include "src/database/dbmanager.h"
+#include "src/config/constants.h"
 
 #include <QLabel>
 #include <QPixmap>
@@ -7,16 +9,9 @@
 
 GridWidget::GridWidget(QWidget *parent)
     : QWidget{parent},
-      screensGrid_(new QGridLayout),
-      COUNT_ELEMENT_IN_ROW(3)
+      screensGrid_(new QGridLayout)
 {
-    QGridLayout *wrapperGrid = new QGridLayout;
-    wrapperGrid->addLayout(screensGrid_, 0, 0);
-    QSpacerItem *spacerRight = new QSpacerItem(1, 1, QSizePolicy::Expanding, QSizePolicy::Minimum);
-    QSpacerItem *spacerBottom = new QSpacerItem(1, 1, QSizePolicy::Minimum, QSizePolicy::Expanding);
-    wrapperGrid->addItem(spacerRight, 0, 1);
-    wrapperGrid->addItem(spacerBottom, 1, 0);
-    this->setLayout(wrapperGrid);
+    this->initWidget();
 
     QVector<ScreenshotInfo> screens = DBManager::instance().selectAllScreenshots();
 
@@ -53,7 +48,8 @@ void GridWidget::pushScreenToGrid(const QPixmap &screen, qint16 similarity, bool
     textLabel->setGraphicsEffect(shadowEffect);
     textLabel->setStyleSheet("font-size: 30px; color: white;");
 
-    QPixmap scaledScreen = screen.scaled(295, 166, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    QPixmap scaledScreen = screen.scaled(Constants::SCALED_SCREEN_WIDTH, Constants::SCALED_SCREEN_HEIGHT,
+                                         Qt::KeepAspectRatio, Qt::SmoothTransformation);
     screenLabel->setPixmap(scaledScreen);
 
     if (pushFront) {
@@ -68,12 +64,12 @@ void GridWidget::pushFrontWidgetToGrid(QWidget *widget)
     qint32 count = screensGrid_->count();
 
     for (qint32 i = count - 1; i >= 0; --i) {
-        qint32 row = i / COUNT_ELEMENT_IN_ROW;
-        qint32 column = i % COUNT_ELEMENT_IN_ROW;
+        qint32 row = i / Constants::COUNT_ELEMENT_IN_ROW;
+        qint32 column = i % Constants::COUNT_ELEMENT_IN_ROW;
         QLayoutItem *currentItem = screensGrid_->itemAtPosition(row, column);
 
-        row = (i + 1) / COUNT_ELEMENT_IN_ROW;
-        column = (i + 1) % COUNT_ELEMENT_IN_ROW;
+        row = (i + 1) / Constants::COUNT_ELEMENT_IN_ROW;
+        column = (i + 1) % Constants::COUNT_ELEMENT_IN_ROW;
         screensGrid_->addWidget(currentItem->widget(), row, column);
     }
     screensGrid_->addWidget(widget, 0, 0);
@@ -82,8 +78,8 @@ void GridWidget::pushFrontWidgetToGrid(QWidget *widget)
 void GridWidget::pushBackWidgetToGrid(QWidget *widget)
 {
     qint32 count = screensGrid_->count();
-    qint32 row = count / COUNT_ELEMENT_IN_ROW;
-    qint32 column = count % COUNT_ELEMENT_IN_ROW;
+    qint32 row = count / Constants::COUNT_ELEMENT_IN_ROW;
+    qint32 column = count % Constants::COUNT_ELEMENT_IN_ROW;
     screensGrid_->addWidget(widget, row, column);
 }
 
@@ -92,4 +88,15 @@ QPixmap GridWidget::byteArrayToPixmap(const QByteArray &byteArray) const
     QPixmap pixmap;
     pixmap.loadFromData(byteArray, "PNG");
     return pixmap;
+}
+
+void GridWidget::initWidget()
+{
+    QGridLayout *wrapperGrid = new QGridLayout;
+    wrapperGrid->addLayout(screensGrid_, 0, 0);
+    QSpacerItem *spacerRight = new QSpacerItem(1, 1, QSizePolicy::Expanding, QSizePolicy::Minimum);
+    QSpacerItem *spacerBottom = new QSpacerItem(1, 1, QSizePolicy::Minimum, QSizePolicy::Expanding);
+    wrapperGrid->addItem(spacerRight, 0, 1);
+    wrapperGrid->addItem(spacerBottom, 1, 0);
+    this->setLayout(wrapperGrid);
 }

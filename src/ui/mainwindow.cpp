@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 #include "gridwidget.h"
 #include "src/screenlogic/screenshotworker.h"
+#include "src/config/constants.h"
 
 #include <QThread>
 #include <QScrollArea>
@@ -15,13 +16,12 @@ MainWindow::MainWindow(QWidget *parent)
       timerLabel_(new QLabel(this)),
       gridWidget_(new GridWidget(this)),
       timer_(new QTimer(this)),
-      INTERVAL(5),
-      secondsLeft_(INTERVAL),
+      secondsLeft_(Constants::INTERVAL_IN_SEC),
       screenshotWorker_(nullptr),
       screenshotThread_(nullptr)
 {
     ui->setupUi(this);
-    this->initWindow();
+    this->initWidget();
 
     timer_->setInterval(1000);
     this->updateTimerLabel();
@@ -36,7 +36,6 @@ MainWindow::MainWindow(QWidget *parent)
             startStopButton_->setText("Stop");
         }
     });
-
     connect(timer_, &QTimer::timeout, this, &MainWindow::onTimerTimeout);
 }
 
@@ -45,7 +44,7 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::initWindow()
+void MainWindow::initWidget()
 {
     startStopButton_->setFixedSize(300, 40);
     startStopButton_->setStyleSheet("QPushButton { "
@@ -77,7 +76,7 @@ void MainWindow::initWindow()
     vLayout->addLayout(hLayout);
 
     ui->centralwidget->setLayout(vLayout);
-    this->setFixedSize(950, 590);
+    this->setFixedSize(Constants::MAINWINDOW_WIDTH, Constants::MAINWINDOW_HEIGHT);
     this->setWindowTitle("Screenshotter");
 }
 
@@ -90,7 +89,7 @@ void MainWindow::updateTimerLabel()
 void MainWindow::onTimerTimeout()
 {
     if (--secondsLeft_ <= 0) {
-        secondsLeft_ = INTERVAL;
+        secondsLeft_ = Constants::INTERVAL_IN_SEC;
 
         screenshotThread_ = new QThread(this);
         screenshotWorker_ = new ScreenshotWorker(gridWidget_);

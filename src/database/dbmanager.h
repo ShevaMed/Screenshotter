@@ -1,7 +1,7 @@
 #ifndef DBMANAGER_H
 #define DBMANAGER_H
 
-#include <src/screenlogic/screenshotinfo.h>
+struct ScreenshotInfo;
 
 #include <QSqlDatabase>
 
