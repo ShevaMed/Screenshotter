@@ -32,3 +32,4 @@ To download Qt, Compiler and IDE, you need to follow the link: https://www.qt.io
 - IDE: Qt Creator 8.0.2
 
 ## Screenshots
+![screenshot](https://github.com/ShevaMed/Screenshotter/blob/main/screenshots/screen1.png)
