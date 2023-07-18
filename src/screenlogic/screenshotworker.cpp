@@ -37,12 +37,12 @@ qint16 ScreenshotWorker::compareScreenshots(const QPixmap &previousScreen, const
     QImage previousImage = previousScreen.toImage();
     QImage currentImage = currentScreen.toImage();
 
-    qint32 width = previousImage.width();
-    qint32 height = previousImage.height();
+    qint32 minWidth = std::min(previousImage.width(), currentScreen.width());
+    qint32 minHeight = std::min(previousImage.height(), currentScreen.height());
     qint64 differentPixels = 0;
 
-    for (qint32 y = 0; y < height; ++y) {
-        for (qint32 x = 0; x < width; ++x) {
+    for (qint32 y = 0; y < minHeight; ++y) {
+        for (qint32 x = 0; x < minWidth; ++x) {
             QRgb previousPixel = previousImage.pixel(x, y);
             QRgb currentPixel = currentImage.pixel(x, y);
             if (previousPixel != currentPixel) {
@@ -50,7 +50,9 @@ qint16 ScreenshotWorker::compareScreenshots(const QPixmap &previousScreen, const
             }
         }
     }
-    qint64 totalPixels = width * height;
+    qint32 maxWidth = std::max(previousImage.width(), currentScreen.width());
+    qint32 maxHeight = std::max(previousImage.height(), currentScreen.height());
+    qint64 totalPixels = maxWidth * maxHeight;
     double similarity = (1.0 - (static_cast<double>(differentPixels) / totalPixels)) * 100.0;
     return static_cast<qint16>(similarity);
 }
