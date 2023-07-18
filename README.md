@@ -21,6 +21,9 @@ To set up the project, follow these steps:
 - DB Browser for SQLite (>= 3.12) (if you are setting up a database): https://github.com/sqlitebrowser/sqlitebrowser/releases
 - Desktop MinGW (>= 8.1.0) 64-bit for C++
 - Qt Creator (>= 5.0.2) or other IDE
+- If you are using Linux you need to install the libraries:
+    - `sudo apt install libxcb-xinerama0`
+    - `sudo apt-get install libgl1-mesa-dev`
 
 To download Qt, Compiler and IDE, you need to follow the link: https://www.qt.io/download-open-source and download the Qt Online Installer or Qt Source Packages.
 
